@@ -69,6 +69,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!--
+		  O Spring Boot 4 modularizou as autoconfiguracoes: flyway-core sozinho
+		  e apenas a biblioteca e nunca chega a executar. O modulo abaixo e o
+		  que integra o Flyway ao ciclo de vida da aplicacao, garantindo que as
+		  migrations rodem ANTES da validacao de schema do Hibernate.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-flyway</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>

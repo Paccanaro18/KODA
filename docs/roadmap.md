@@ -33,18 +33,13 @@ Fundação do backend, autenticação, autorização e o esqueleto do frontend c
 - [x] Migrations versionadas (Flyway `V1`)
 - [x] Docker Compose sobe Postgres + Redis com um comando
 - [x] Health check e métricas expostos via Actuator
-- [x] Testes escritos: fluxo de auth, autorização/IDOR (`SEC-03`), brute force (`SEC-06`)
+- [x] **Suíte de testes executada e verde — 19/19** (fluxo de auth, autorização/IDOR `SEC-03`, brute force `SEC-06`)
+- [x] Migrations validadas rodando do zero em banco limpo (Flyway + Postgres real via Testcontainers)
 - [x] CI com build, testes, scanner de segredos e scan de dependências
-- [ ] **Suíte de testes executada e verde** — bloqueado por `ENV-02` (ver abaixo)
-- [ ] Migrations validadas rodando do zero em banco limpo — depende do item acima
 - [ ] Design tokens implementados; dark e light mode funcionais — próxima entrega (frontend)
 
-> **`ENV-02` (bloqueador, MEDIUM):** o WSL2 não está instalado nesta máquina, então
-> o Docker Desktop não sobe o engine Linux. Sem Docker, os testes de integração
-> (Testcontainers) e o `docker compose` não executam localmente. O código compila
-> e os testes compilam, mas **não foram executados**.
-> Correção: `wsl --install` como administrador, seguido de reinicialização.
-> Alternativa: o job do GitHub Actions já roda a suíte completa em runner com Docker.
+> `ENV-02` **resolvido** em 2026-08-31: o WSL2 foi instalado e o Docker Desktop
+> passou a subir o engine Linux, destravando Testcontainers e `docker compose`.
 
 ## Phase 2 — Curriculum
 

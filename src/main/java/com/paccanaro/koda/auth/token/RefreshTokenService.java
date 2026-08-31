@@ -20,10 +20,14 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository repository;
     private final JwtService jwtService;
+    private final SessionRevocationService sessionRevocation;
 
-    public RefreshTokenService(RefreshTokenRepository repository, JwtService jwtService) {
+    public RefreshTokenService(RefreshTokenRepository repository,
+                               JwtService jwtService,
+                               SessionRevocationService sessionRevocation) {
         this.repository = repository;
         this.jwtService = jwtService;
+        this.sessionRevocation = sessionRevocation;
     }
 
     /** Emite um refresh token novo e devolve o valor em claro (a unica vez que ele existe). */
@@ -58,7 +62,10 @@ public class RefreshTokenService {
         if (existing.getReplacedBy() != null) {
             log.warn("Reuso de refresh token detectado; revogando sessoes do usuario {}",
                     existing.getUser().getId());
-            repository.revokeAllForUser(existing.getUser().getId(), Instant.now());
+            // Transacao propria: quem chama este metodo lanca excecao logo em
+            // seguida para negar a requisicao, e o rollback resultante desfaria
+            // a revogacao. Ver SessionRevocationService.
+            sessionRevocation.revokeAllForUserImmediately(existing.getUser().getId());
             return Optional.empty();
         }
 
