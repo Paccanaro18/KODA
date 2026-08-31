@@ -49,6 +49,37 @@ jobs:
           path: target/surefire-reports/
           if-no-files-found: ignore
 
+  web:
+    name: Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      # `npm ci` em vez de `install`: falha se o lockfile divergir do
+      # package.json, garantindo que o CI construa exatamente o que foi commitado.
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Verificar tipos
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+
   secrets-scan:
     name: Varredura de segredos
     runs-on: ubuntu-latest

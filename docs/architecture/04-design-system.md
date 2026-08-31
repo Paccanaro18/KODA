@@ -1,6 +1,10 @@
 # KODA — Identidade Visual e Design System
 
-> Fase 0 (Architecture) · Status: proposta · Precede qualquer tela
+> Fase 1 · Status: **implementado** · Precede qualquer tela do produto
+
+**Implementação:** os tokens vivem em [`web/app/globals.css`](../../web/app/globals.css) e os componentes em [`web/components/ui/`](../../web/components/ui). A página `/` do frontend é a referência viva do sistema — mostra todo componente em todos os seus estados, e serve para verificar consistência, dark/light e acessibilidade antes de existir qualquer tela real. Nenhuma tela do produto foi construída ainda, por decisão: o sistema vem primeiro.
+
+Os tokens usam duas camadas — escala bruta (`--color-brand-500`) e token semântico (`--accent`). Componentes consomem **apenas** a semântica. Trocar a marca inteira é reescrever a primeira camada; mudar o significado de um papel é reescrever a segunda.
 
 Regra de precedência, aplicada em toda dúvida: **clareza > quantidade de elementos** · **feedback > animação** · **identidade própria > semelhança com referências**.
 

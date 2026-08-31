@@ -32,7 +32,9 @@ O aluno **nunca** espera por uma chamada de LLM.
 
 **Fase 1 — Authentication + Core (backend).** Stack decidida em ADR-0001: Spring Boot 4 / Java 21, PostgreSQL + pgvector, Redis; frontend Next.js a partir da próxima entrega.
 
-Já implementado: registro, login, refresh rotativo, logout, `/me`, RBAC com autorização server-side, hashing Argon2id, proteção contra brute force, rate limiting, secure headers, migrations Flyway e observabilidade via Actuator.
+**Backend:** registro, login, refresh rotativo com detecção de roubo de sessão, logout, `/me`, RBAC server-side, Argon2id, proteção contra brute force, rate limiting, secure headers, migrations Flyway e Actuator. Suíte de 19 testes de integração verde contra Postgres e Redis reais.
+
+**Frontend:** design system completo — tokens, dark/light e biblioteca de componentes com todos os estados. Nenhuma tela do produto ainda, por decisão: o sistema vem antes das telas. A rota `/` é a referência viva do design system.
 
 ## Como rodar
 
@@ -48,6 +50,12 @@ Testes (sobem Postgres e Redis reais via Testcontainers — exigem Docker):
 
 ```bash
 ./mvnw verify
+```
+
+Frontend — o design system fica em `http://localhost:3000`:
+
+```bash
+cd web && npm install && npm run dev
 ```
 
 ## API — Fase 1

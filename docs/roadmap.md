@@ -36,7 +36,8 @@ Fundação do backend, autenticação, autorização e o esqueleto do frontend c
 - [x] **Suíte de testes executada e verde — 19/19** (fluxo de auth, autorização/IDOR `SEC-03`, brute force `SEC-06`)
 - [x] Migrations validadas rodando do zero em banco limpo (Flyway + Postgres real via Testcontainers)
 - [x] CI com build, testes, scanner de segredos e scan de dependências
-- [ ] Design tokens implementados; dark e light mode funcionais — próxima entrega (frontend)
+- [x] Design tokens implementados; dark e light mode funcionais
+- [x] Biblioteca de componentes base com estados explícitos; lint, tipos e build verdes
 
 > `ENV-02` **resolvido** em 2026-08-31: o WSL2 foi instalado e o Docker Desktop
 > passou a subir o engine Linux, destravando Testcontainers e `docker compose`.
