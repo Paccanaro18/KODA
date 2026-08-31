@@ -77,7 +77,7 @@ public class AuthService {
             throw ApiException.emailAlreadyRegistered();
         }
 
-        profileRepository.save(Profile.createFor(user, request.displayName()));
+        profileRepository.save(Profile.createFor(user, blankToNull(request.displayName())));
 
         log.info("Novo usuario registrado: {}", user.getId());
         return issueTokens(user, userAgent);
@@ -139,6 +139,18 @@ public class AuthService {
     /** Normaliza para minusculas: o banco tem CHECK que rejeita qualquer outra forma. */
     private static String normalize(String email) {
         return email == null ? null : email.trim().toLowerCase(Locale.ROOT);
+    }
+
+    /**
+     * O CHECK de profiles exige display_name nulo ou com pelo menos 1 caractere.
+     * Uma string vazia passa pela validacao do DTO e so quebraria no banco.
+     */
+    private static String blankToNull(String value) {
+        if (value == null) {
+            return null;
+        }
+        String trimmed = value.trim();
+        return trimmed.isEmpty() ? null : trimmed;
     }
 
     public record AuthTokens(String accessToken, String refreshToken, long expiresInSeconds) {

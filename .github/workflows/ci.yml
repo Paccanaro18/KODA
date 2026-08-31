@@ -30,6 +30,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      # Rede de seguranca: o bit de execucao do mvnw se perde com facilidade
+      # quando o arquivo e commitado a partir do Windows.
+      - name: Garantir mvnw executavel
+        run: chmod +x ./mvnw
+
       - name: Build e testes
         env:
           # Segredo exclusivo do CI. O de producao vive no secret manager.
@@ -50,12 +55,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # Gitleaks precisa do historico para varrer commits
+          fetch-depth: 0   # gitleaks varre o historico, nao so o working tree
 
-      - name: Gitleaks
-        uses: gitleaks/gitleaks-action@v2
+      # Binario oficial em versao fixa, em vez da action de terceiro: o
+      # comportamento e totalmente previsivel e o log mostra o achado exato.
+      - name: Instalar gitleaks
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_VERSION: 8.30.1
+        run: |
+          curl -sSfL \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz" \
+            -o /tmp/gitleaks.tar.gz
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          sudo install /tmp/gitleaks /usr/local/bin/gitleaks
+          gitleaks version
+
+      - name: Varrer segredos
+        run: gitleaks detect --source . --config .gitleaks.toml --redact --no-banner --verbose
 
   dependency-scan:
     name: Vulnerabilidades em dependencias
@@ -70,9 +86,11 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
-      # Falha o build em vulnerabilidade critica ou alta nas dependencias.
+      # Falha em vulnerabilidade critica ou alta que ja tenha correcao
+      # disponivel. `ignore-unfixed` evita bloquear o build por CVE que ainda
+      # nao tem versao corrigida — nesse caso nao ha acao possivel.
       - name: Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: fs
           scan-ref: .

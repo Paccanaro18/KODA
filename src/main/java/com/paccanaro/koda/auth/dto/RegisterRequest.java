@@ -12,7 +12,10 @@ import jakarta.validation.constraints.Size;
 public record RegisterRequest(
 
         @NotBlank(message = "E-mail e obrigatorio")
-        @Email(message = "E-mail invalido")
+        // O @Email padrao aceita formas como "a@b", sem dominio de topo. O banco
+        // e mais estrito (CHECK users_email_format), entao sem esta regex um
+        // e-mail assim viraria erro 500 em vez de um 400 com mensagem util.
+        @Email(regexp = "^[^@\\s]+@[^@\\s.]+(\\.[^@\\s.]+)+$", message = "E-mail invalido")
         @Size(max = 254, message = "E-mail longo demais")
         String email,
 

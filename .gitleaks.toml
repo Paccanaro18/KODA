@@ -1,0 +1,31 @@
+# Configuracao do gitleaks para o KODA.
+#
+# Herda o conjunto completo de regras padrao. A allowlist abaixo cobre apenas
+# valores que sao comprovadamente placeholders ou credenciais de teste
+# descartaveis — nunca segredos reais.
+#
+# Regra de ouro ao editar este arquivo: se houver duvida sobre um achado, a
+# resposta correta e rotacionar o valor, nao adiciona-lo aqui.
+
+title = "KODA gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Placeholders de documentacao e credenciais efemeras de teste"
+
+paths = [
+  # Contem apenas placeholders do tipo "troque-por-...", nunca valores reais.
+  '''^\.env\.example$''',
+  # Credenciais descartaveis de container efemero, geradas para a suite de
+  # testes e sem valor fora dela.
+  '''^src/test/java/com/paccanaro/koda/AbstractIntegrationTest\.java$''',
+  # Segredo do CI, valido apenas dentro do runner e sem acesso a nada.
+  '''^\.github/workflows/ci\.yml$''',
+]
+
+regexes = [
+  # Senha do Postgres local declarada no compose de desenvolvimento.
+  '''koda_test_password''',
+]
