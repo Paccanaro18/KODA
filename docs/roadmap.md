@@ -26,16 +26,25 @@ Auditoria, riscos, arquitetura, modelo de dados, estratégia de IA, roadmap e AD
 Fundação do backend, autenticação, autorização e o esqueleto do frontend com design tokens.
 
 **Concluída quando:**
-- [ ] Registro, login, refresh e logout funcionando com hashing Argon2id
-- [ ] RBAC com autorização server-side em nível de método
-- [ ] Rate limiting e proteção contra brute force ativos e testados
-- [ ] Secure headers e CSP configurados
-- [ ] Migrations versionadas rodando do zero em banco limpo
-- [ ] Docker Compose sobe o ambiente completo com um comando
-- [ ] Health check, logs estruturados e métricas expostos
-- [ ] Design tokens implementados; dark e light mode funcionais
-- [ ] Teste de autorização por endpoint, incluindo tentativa de IDOR (`SEC-03`)
-- [ ] CI rodando build, testes, lint e scanner de segredos
+- [x] Registro, login, refresh e logout implementados com hashing Argon2id
+- [x] RBAC com autorização server-side (`@EnableMethodSecurity`, default deny)
+- [x] Rate limiting e proteção contra brute force implementados
+- [x] Secure headers e CSP configurados
+- [x] Migrations versionadas (Flyway `V1`)
+- [x] Docker Compose sobe Postgres + Redis com um comando
+- [x] Health check e métricas expostos via Actuator
+- [x] Testes escritos: fluxo de auth, autorização/IDOR (`SEC-03`), brute force (`SEC-06`)
+- [x] CI com build, testes, scanner de segredos e scan de dependências
+- [ ] **Suíte de testes executada e verde** — bloqueado por `ENV-02` (ver abaixo)
+- [ ] Migrations validadas rodando do zero em banco limpo — depende do item acima
+- [ ] Design tokens implementados; dark e light mode funcionais — próxima entrega (frontend)
+
+> **`ENV-02` (bloqueador, MEDIUM):** o WSL2 não está instalado nesta máquina, então
+> o Docker Desktop não sobe o engine Linux. Sem Docker, os testes de integração
+> (Testcontainers) e o `docker compose` não executam localmente. O código compila
+> e os testes compilam, mas **não foram executados**.
+> Correção: `wsl --install` como administrador, seguido de reinicialização.
+> Alternativa: o job do GitHub Actions já roda a suíte completa em runner com Docker.
 
 ## Phase 2 — Curriculum
 

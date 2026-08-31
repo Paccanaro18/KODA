@@ -31,3 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### KODA - segredos e ambiente ###
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+### Node / frontend (fases seguintes) ###
+node_modules/
+.next/
+out/
+dist/
+*.tsbuildinfo

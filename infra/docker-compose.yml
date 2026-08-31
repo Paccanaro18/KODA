@@ -1,0 +1,53 @@
+# Ambiente de desenvolvimento local do KODA.
+#
+# Uso:
+#   cp .env.example .env     (e preencha os valores)
+#   docker compose --env-file .env up -d
+#
+# Este arquivo e para desenvolvimento. Producao usa infraestrutura gerenciada
+# e segredos vindos de um secret manager, nunca de um arquivo no repositorio.
+
+name: koda
+
+services:
+  postgres:
+    # pgvector ja embutido: as fases seguintes precisam dele para a busca de
+    # similaridade semantica entre questoes (SCA-01). Usar a mesma imagem em
+    # dev, teste e producao evita surpresa de extensao ausente.
+    image: pgvector/pgvector:pg17
+    container_name: koda-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${KODA_DB_NAME:-koda}
+      POSTGRES_USER: ${KODA_DB_USER:-koda}
+      # Sem default: o compose falha se a senha nao for fornecida.
+      POSTGRES_PASSWORD: ${KODA_DB_PASSWORD:?defina KODA_DB_PASSWORD no .env}
+    ports:
+      - "127.0.0.1:5432:5432"   # exposto apenas em loopback
+    volumes:
+      - koda-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${KODA_DB_USER:-koda} -d ${KODA_DB_NAME:-koda}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  redis:
+    image: redis:7-alpine
+    container_name: koda-redis
+    restart: unless-stopped
+    # Persistencia desligada: o Redis aqui guarda apenas cache, contadores de
+    # rate limit e tentativas de login. Nada que precise sobreviver a um restart.
+    command: ["redis-server", "--save", "", "--appendonly", "no"]
+    ports:
+      - "127.0.0.1:6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  koda-pgdata:
+    name: koda-pgdata
