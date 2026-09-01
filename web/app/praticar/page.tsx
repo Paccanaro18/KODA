@@ -51,7 +51,7 @@ const QUESTIONS: Question[] = [
     id: "q2",
     concept: "Condicionais",
     prompt: "O que este trecho imprime?",
-    code: "idade = 16\n\nse idade >= 18:\n    imprimir(\"maior\")\nsenao:\n    imprimir(\"menor\")",
+    code: 'let idade = 16;\n\nif (idade >= 18) {\n  console.log("maior");\n} else {\n  console.log("menor");\n}',
     options: [
       { id: "a", label: "maior" },
       { id: "b", label: "menor" },
@@ -60,13 +60,13 @@ const QUESTIONS: Question[] = [
     ],
     correctOptionId: "b",
     explanation: "16 nao e maior ou igual a 18, entao o fluxo cai no senao e imprime \"menor\".",
-    hint: "Compare 16 com 18 antes de olhar pros ramos do se/senao.",
+    hint: "Compare 16 com 18 antes de olhar pros ramos do if/else.",
   },
   {
     id: "q3",
     concept: "Lacos",
     prompt: "Quantas vezes este laco executa?",
-    code: "para i de 0 ate 4:\n    imprimir(i)",
+    code: "for (let i = 0; i <= 4; i++) {\n  console.log(i);\n}",
     options: [
       { id: "a", label: "4" },
       { id: "b", label: "5" },
@@ -81,7 +81,7 @@ const QUESTIONS: Question[] = [
     id: "q4",
     concept: "Funcoes",
     prompt: "O que esta funcao retorna para dobro(5)?",
-    code: "funcao dobro(x):\n    retornar x * 2",
+    code: "function dobro(x) {\n  return x * 2;\n}\n\ndobro(5);",
     options: [
       { id: "a", label: "5" },
       { id: "b", label: "10" },
@@ -96,7 +96,7 @@ const QUESTIONS: Question[] = [
     id: "q5",
     concept: "Escopo",
     prompt: "Depois de rodar este codigo, qual o valor de x fora da funcao?",
-    code: "x = 1\n\nfuncao muda():\n    x = 2\n\nmuda()",
+    code: "let x = 1;\n\nfunction muda() {\n  let x = 2;\n}\n\nmuda();",
     options: [
       { id: "a", label: "1" },
       { id: "b", label: "2" },
@@ -198,7 +198,7 @@ function PracticePageContent() {
             <h1 className="text-xl font-extrabold mb-4">{question.prompt}</h1>
 
             {question.code && (
-              <CodeBlock code={question.code} language="pseudocodigo" className="mb-5" />
+              <CodeBlock code={question.code} language="javascript" className="mb-5" />
             )}
 
             <div className="flex flex-col gap-3">
