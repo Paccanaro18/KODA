@@ -73,6 +73,31 @@ public class QuestionVersion {
         // exigido pelo JPA
     }
 
+    private QuestionVersion(UUID questionId, int version, String payload, String correctAnswer, String explanation,
+                            String distractorRationales, int declaredDifficulty, Integer estimatedTimeSeconds,
+                            byte[] canonicalHash, BigDecimal qualityScore, String language) {
+        this.questionId = questionId;
+        this.version = version;
+        this.payload = payload;
+        this.correctAnswer = correctAnswer;
+        this.explanation = explanation;
+        this.distractorRationales = distractorRationales;
+        this.declaredDifficulty = declaredDifficulty;
+        this.estimatedTimeSeconds = estimatedTimeSeconds;
+        this.canonicalHash = canonicalHash;
+        this.qualityScore = qualityScore;
+        this.language = language;
+    }
+
+    /** Primeira versao de uma questao gerada por IA. Imutavel a partir daqui (DAT-02). */
+    public static QuestionVersion firstVersion(UUID questionId, String payload, String correctAnswer,
+                                               String explanation, String distractorRationales, int declaredDifficulty,
+                                               Integer estimatedTimeSeconds, byte[] canonicalHash,
+                                               BigDecimal qualityScore) {
+        return new QuestionVersion(questionId, 1, payload, correctAnswer, explanation, distractorRationales,
+                declaredDifficulty, estimatedTimeSeconds, canonicalHash, qualityScore, "pt-BR");
+    }
+
     public UUID getId() {
         return id;
     }

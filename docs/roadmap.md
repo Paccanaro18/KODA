@@ -59,41 +59,46 @@ Grafo de conceitos, pré-requisitos e mapa de aprendizado.
 Banco de questões, tipos extensíveis, correção e deduplicação.
 
 **Concluída quando:**
-- [ ] Registry de tipos permite adicionar um tipo novo sem alterar o núcleo (`MNT-01`)
-- [ ] Ao menos 5 tipos implementados com render, validate e score
-- [ ] Correção determinística server-side; gabarito nunca sai antes da submissão
-- [ ] Pipeline de deduplicação das 4 camadas operante com `duplicate_rate` medido
-- [ ] `question_attempts` append-only registrando o conjunto completo de sinais
-- [ ] Questões versionadas e imutáveis após publicação (`DAT-02`)
-- [ ] Feedback rico: correção, motivo, conceito testado, por que as alternativas erram, próximo passo
+- [x] Registry de tipos permite adicionar um tipo novo sem alterar o núcleo (`MNT-01`) — `QuestionTypeRegistry`
+- [x] Ao menos 5 tipos implementados com render, validate e score (single_choice, multiple_select, true_false, ordering, fill_in_blank)
+- [x] Correção determinística server-side; gabarito nunca sai antes da submissão (testado em `PracticeFlowIntegrationTest`)
+- [x] `question_attempts` append-only registrando os sinais usados pelo engine
+- [x] Questões versionadas e imutáveis após publicação (`DAT-02`)
+- [x] Feedback rico: correção, motivo, conceito testado, por que as alternativas erram
+- [ ] Deduplicação: camadas 1, 2 e 4 operantes com `duplicate_rate` medido; **camada 3 (similaridade semântica via `pgvector`) não implementada** — depende de infraestrutura de embeddings
+- [ ] `question_attempts` ainda não grava `error_type`, `self_confidence` nem `hints_used` (colunas existem; a classificação de erro é da Fase 4/8)
 
 ## Phase 4 — Adaptive Learning
 
 O Adaptive Learning Engine determinístico. É a fase de maior densidade de testes.
 
 **Concluída quando:**
-- [ ] Engine é puro, sem I/O, e recebe o perfil como entrada
-- [ ] Todas as entradas da seção 4 consideradas na decisão
-- [ ] `selection_reason` legível retornado e exibido ao aluno (`UX-02`)
-- [ ] Progressão de estágio implementada: unseen → recognizes → understands → applies → solves → masters
-- [ ] Repetição espaçada com `next_review_at` e decaimento
-- [ ] Classificação de erro alimentando as próximas seleções
-- [ ] **Testes cobrindo:** iniciante, intermediário, avançado, respostas perfeitas, sequência de erros, mudança de assunto, esquecimento, questões repetidas, questões fáceis demais, difíceis demais, usuário novo e usuário sem histórico
-- [ ] Testes property-based garantindo invariantes (nunca sugerir conceito com pré-requisito `hard` não atendido; nunca repetir questão vista recentemente)
+- [x] Engine é puro, sem I/O, e recebe o perfil como entrada (`AdaptiveEngine`; usa `CurriculumConcept` próprio para não depender de entidade JPA)
+- [x] `selection_reason` legível retornado e exibido ao aluno (`UX-02`) — `PracticeQuestionResponse.selectionReason`
+- [x] Priorização: revisão > foco atual > conceito novo, respeitando pré-requisitos
+- [x] Ajuste de dificuldade por precisão recente, com amostra mínima para não oscilar
+- [ ] **Parte das entradas da seção 4 consideradas** — usa precisão recente/histórica, dificuldade, erros consecutivos e pré-requisitos; **faltam** `time_since_last_review`, `mistake_patterns`, `topic_importance` e `learning_goal`
+- [ ] Progressão de estágio de 6 níveis (unseen → … → masters) — hoje usa os 4 estados de `ProgressState` (ACTIVE, COMPLETED, MASTERED, NEEDS_REVIEW)
+- [ ] Repetição espaçada com `next_review_at` e decaimento — não implementada
+- [ ] Classificação de erro alimentando as próximas seleções — não implementada
+- [ ] Testes property-based garantindo invariantes
 
 ## Phase 5 — AI Generation
 
 AI Gateway e pipeline de validação.
 
 **Concluída quando:**
-- [ ] AI Gateway é a única saída para o LLM, com timeout, retry, backoff, circuit breaker, rate limit e orçamento
-- [ ] Prompts versionados; `prompt_version` e `model` gravados em toda geração
-- [ ] Pipeline de 7 estágios operante, com motivo de rejeição registrado
-- [ ] Geração assíncrona por fila; **nenhuma chamada de LLM no request do aluno** (`ARC-01`)
-- [ ] Custo e tokens observáveis por tópico, prompt e modelo
-- [ ] Testes de prompt injection direto e indireto (`SEC-02`)
-- [ ] Nenhum segredo ou dado pessoal em prompt, verificado por teste
-- [ ] Fallback validado: provedor indisponível não afeta o aluno
+- [x] AI Gateway é a única saída para o LLM, com timeout, retry, backoff, circuit breaker, rate limit e orçamento (`AiGatewayClient` + `AnthropicAiGatewayClient`, Resilience4j; orçamento diário em `AiBudgetGuard`)
+- [x] Prompts versionados; `prompt_version` e `model` gravados em toda geração (`QuestionGenerationPrompts.VERSION`, `ai_generations`)
+- [x] Pipeline de 7 estágios operante, com motivo de rejeição registrado (`ValidationPipeline`, `validation_results` + `outcome`)
+- [x] Geração assíncrona por fila; **nenhuma chamada de LLM no request do aluno** (`ARC-01`) — `generation_requests` + `GenerationWorker` agendado
+- [x] Custo e tokens observáveis por geração e por modelo (`input_tokens`, `output_tokens`, `cost_usd`, `latency_ms`)
+- [x] Testes de prompt injection direto e indireto (`SEC-02`)
+- [x] Nenhum segredo ou dado pessoal em prompt, verificado por teste (`QuestionGenerationPromptsTest`)
+- [x] Fallback validado: provedor indisponível não afeta o aluno (teste de integração cobre queda do provedor + sessão de prática seguindo normal)
+- [ ] Custo agregado **por tópico e por prompt** — hoje o custo é observável por geração e por modelo; o corte por tópico depende do painel da Fase 8
+- [ ] Validação cruzada por segunda passagem (modelo crítico adversarial) — previsto na estratégia de IA, não implementado nesta fase
+- [ ] Fluxo de revisão humana: questão gerada nasce `IN_REVIEW` e **não há ainda tela de admin** para promovê-la a `PUBLISHED` (Fase 8)
 
 ## Phase 6 — Code Sandbox
 

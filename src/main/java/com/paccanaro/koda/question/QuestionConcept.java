@@ -29,6 +29,15 @@ public class QuestionConcept {
         // exigido pelo JPA
     }
 
+    private QuestionConcept(UUID questionVersionId, UUID conceptId) {
+        this.questionVersionId = questionVersionId;
+        this.conceptId = conceptId;
+    }
+
+    public static QuestionConcept link(UUID questionVersionId, UUID conceptId) {
+        return new QuestionConcept(questionVersionId, conceptId);
+    }
+
     public UUID getId() {
         return id;
     }
