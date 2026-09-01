@@ -13,12 +13,8 @@ import java.util.UUID;
 
 /**
  * Evidencia real de pratica de um usuario num concept. So existe linha aqui
- * para o que o aluno de fato tentou.
- *
- * <p>Nesta fase a tabela fica vazia: nada no codigo ainda escreve progresso —
- * isso e trabalho da Fase 3 (banco de questoes) e Fase 4 (engine adaptativo).
- * A entidade existe agora para que {@link CurriculumService} ja saiba
- * consultar e o schema ja esteja pronto para essas fases escreverem.
+ * para o que o aluno de fato tentou — escrita pelo {@code engine} a cada
+ * tentativa registrada (ver {@code AdaptiveEngine#assessProgress}).
  */
 @Entity
 @Table(name = "user_concept_progress")
@@ -44,6 +40,22 @@ public class UserConceptProgress {
 
     protected UserConceptProgress() {
         // exigido pelo JPA
+    }
+
+    private UserConceptProgress(UUID userId, UUID conceptId, ProgressState state, int progressPercent) {
+        this.userId = userId;
+        this.conceptId = conceptId;
+        this.state = state;
+        this.progressPercent = progressPercent;
+    }
+
+    public static UserConceptProgress start(UUID userId, UUID conceptId, ProgressState state, int progressPercent) {
+        return new UserConceptProgress(userId, conceptId, state, progressPercent);
+    }
+
+    public void applyAssessment(ProgressState newState, int newProgressPercent) {
+        this.state = newState;
+        this.progressPercent = newProgressPercent;
     }
 
     public UUID getId() {

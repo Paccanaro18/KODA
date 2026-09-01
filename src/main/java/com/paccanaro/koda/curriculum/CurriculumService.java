@@ -67,6 +67,33 @@ public class CurriculumService {
         return new CurriculumMapResponse(topicResponses);
     }
 
+    /**
+     * Ordem canonica do curriculo (subject -&gt; topic -&gt; concept, por
+     * display_order), achatada. Usado pelo {@code AdaptiveEngine} (via
+     * {@code QuestionService}) para desempatar candidatos de mesma
+     * prioridade — a mesma ordem que {@link #buildMap} usa pra exibir o mapa.
+     */
+    public List<Concept> curriculumOrderedConcepts() {
+        List<Subject> subjects = sortedBy(subjectRepository.findAll(), Subject::getDisplayOrder);
+        List<Topic> topics = sortedBy(topicRepository.findAll(), Topic::getDisplayOrder);
+        List<Concept> concepts = sortedBy(conceptRepository.findAll(), Concept::getDisplayOrder);
+
+        Map<UUID, List<Topic>> topicsBySubject = groupBy(topics, Topic::getSubjectId);
+        Map<UUID, List<Concept>> conceptsByTopic = groupBy(concepts, Concept::getTopicId);
+
+        return subjects.stream()
+                .flatMap(subject -> topicsBySubject.getOrDefault(subject.getId(), List.of()).stream())
+                .flatMap(topic -> conceptsByTopic.getOrDefault(topic.getId(), List.of()).stream())
+                .toList();
+    }
+
+    /** Arestas do grafo de pre-requisitos, agrupadas por concept. Mesma leitura que {@link #buildMap} faz para calcular "locked"/"available". */
+    public Map<UUID, List<UUID>> prerequisitesByConcept() {
+        return prerequisiteRepository.findAll().stream()
+                .collect(Collectors.groupingBy(ConceptPrerequisite::getConceptId,
+                        Collectors.mapping(ConceptPrerequisite::getPrerequisiteConceptId, Collectors.toList())));
+    }
+
     private TopicMapResponse toTopicResponse(Topic topic, List<Concept> concepts,
                                              Map<UUID, List<UUID>> prerequisitesByConcept,
                                              Map<UUID, UserConceptProgress> progressByConcept) {

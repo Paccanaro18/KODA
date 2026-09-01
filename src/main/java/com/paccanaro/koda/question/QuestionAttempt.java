@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -40,6 +42,7 @@ public class QuestionAttempt {
     @Column(name = "response_time_ms", nullable = false, updatable = false)
     private int responseTimeMs;
 
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     @Column(name = "difficulty_at_time", nullable = false, updatable = false)
     private int difficultyAtTime;
 
@@ -84,6 +87,14 @@ public class QuestionAttempt {
 
     public boolean isCorrect() {
         return correct;
+    }
+
+    public int getDifficultyAtTime() {
+        return difficultyAtTime;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
     @Override

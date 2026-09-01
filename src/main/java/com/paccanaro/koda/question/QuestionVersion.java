@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -48,6 +50,7 @@ public class QuestionVersion {
     @Column(name = "distractor_rationales", columnDefinition = "text")
     private String distractorRationales;
 
+    @JdbcTypeCode(SqlTypes.SMALLINT)
     @Column(name = "declared_difficulty", nullable = false)
     private int declaredDifficulty;
 
