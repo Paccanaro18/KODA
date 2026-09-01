@@ -41,8 +41,10 @@ export function Progress({
         </div>
       )}
 
+      {/* Barra alta (16px). O fio de 8px lia como enfeite de dashboard; nesta
+          altura ela vira o placar da sessao, que e o papel que tem de fato. */}
       <div
-        className="h-2 w-full rounded-full bg-[var(--bg-inset)] overflow-hidden"
+        className="h-4 w-full rounded-full bg-[var(--bg-inset)] overflow-hidden"
         // A barra e semanticamente um progressbar: leitores de tela anunciam o
         // valor. Sem isso, o progresso existiria apenas como cor na tela.
         role="progressbar"
@@ -52,9 +54,16 @@ export function Progress({
         aria-label={label ?? "Progresso"}
       >
         <div
-          className="h-full rounded-full transition-[width] duration-[var(--duration-slow)] ease-[var(--ease-standard)]"
+          className="relative h-full rounded-full transition-[width] duration-[var(--duration-slow)] ease-[var(--ease-standard)]"
           style={{ width: `${clamped}%`, backgroundColor: TONES[tone] }}
-        />
+        >
+          {/* Brilho interno: uma faixa clara no terco de cima. E o que faz a
+              barra parecer um tubo preenchido em vez de um retangulo colorido. */}
+          <span
+            className="absolute inset-x-1.5 top-[3px] h-[4px] rounded-full bg-white/35"
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </div>
   );

@@ -63,13 +63,13 @@ export function XpCounter({ value, className }: XpCounterProps) {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 font-semibold tabular-nums",
+        "inline-flex items-center gap-1.5 font-extrabold tabular-nums",
         className,
       )}
     >
       <BoltIcon />
       <span>{display.toLocaleString("pt-BR")}</span>
-      <span className="text-[var(--text-secondary)] font-normal text-sm">XP</span>
+      <span className="text-[var(--text-secondary)] font-bold text-sm">XP</span>
     </span>
   );
 }
@@ -85,7 +85,7 @@ export function XpGain({ amount, className }: XpGainProps) {
     <span
       className={cn(
         "inline-flex items-center gap-1 px-2 py-0.5 rounded-full",
-        "bg-[var(--reward-soft)] text-[var(--reward)] text-sm font-semibold",
+        "bg-[var(--reward)] text-[#5c4300] text-sm font-extrabold",
         "motion-safe:animate-[koda-xp-float_var(--duration-celebration)_var(--ease-standard)]",
         className,
       )}

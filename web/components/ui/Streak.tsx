@@ -23,7 +23,7 @@ export function Streak({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 font-semibold tabular-nums",
+        "inline-flex items-center gap-1.5 font-extrabold tabular-nums",
         size === "sm" ? "text-sm" : "text-base",
         className,
       )}
@@ -35,7 +35,7 @@ export function Streak({
     >
       <StreakMark active={!atRisk} size={size} />
       <span>{days}</span>
-      <span className="font-normal text-[var(--text-secondary)] text-sm">
+      <span className="font-bold text-[var(--text-secondary)] text-sm">
         {days === 1 ? "dia" : "dias"}
       </span>
     </span>
@@ -52,7 +52,7 @@ function StreakMark({
   return (
     <svg
       viewBox="0 0 24 24"
-      className={cn(size === "sm" ? "size-4" : "size-5")}
+      className={cn(size === "sm" ? "size-5" : "size-6")}
       fill="none"
       aria-hidden="true"
     >

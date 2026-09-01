@@ -1,13 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Nunito, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider, themeInitScript } from "@/components/theme/ThemeProvider";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
 
 // Fontes servidas pelo proprio dominio via next/font: sem request a terceiro
 // em runtime, sem layout shift e sem depender de CDN externo.
-const inter = Inter({
+// Nunito e a fonte de UI: arredondada, de contraste baixo, com o desenho de
+// letra que faz o texto soar falado em vez de gerado. Vai ate o peso 900
+// porque nesta linguagem visual titulo e rotulo de botao sao pesados.
+const nunito = Nunito({
   subsets: ["latin"],
-  variable: "--font-inter",
+  weight: ["400", "600", "700", "800", "900"],
+  variable: "--font-nunito",
   display: "swap",
 });
 
@@ -32,8 +37,10 @@ export default function RootLayout({
         {/* Antes da primeira pintura, para nao piscar o tema errado. */}
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}>
-        <ThemeProvider>{children}</ThemeProvider>
+      <body className={`${nunito.variable} ${jetbrainsMono.variable} antialiased`}>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

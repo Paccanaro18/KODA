@@ -3,7 +3,7 @@
 import { cn } from "@/lib/cn";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type Variant = "primary" | "secondary" | "ghost" | "success" | "danger";
+type Variant = "action" | "primary" | "secondary" | "ghost" | "danger";
 type Size = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,29 +14,45 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leadingIcon?: ReactNode;
 }
 
+/**
+ * Botao com labio.
+ *
+ * A faixa escura embaixo e `box-shadow`, nunca `border-bottom`. Borda entra na
+ * altura da caixa: remove-la no :active encolheria o botao em 4px e empurraria
+ * tudo que vem depois dele. Sombra nao ocupa espaco, entao o afundar e puro
+ * movimento — e o layout nao se mexe.
+ *
+ * O par translate/shadow tem que somar sempre a mesma distancia: o botao desce
+ * exatamente a altura do labio que perdeu. E isso que faz o dedo sentir que
+ * encostou no fundo, em vez de ver um elemento deslizando.
+ */
 const VARIANTS: Record<Variant, string> = {
+  // Verde: avancar, confirmar, comecar. A cor mais viva do sistema, reservada
+  // para o movimento que faz o aluno progredir.
+  action:
+    "bg-[var(--action)] text-white shadow-[0_4px_0_var(--lip-action)] hover:bg-[var(--action-hover)] active:shadow-[0_0_0_var(--lip-action)] active:translate-y-[4px]",
+  // Indigo da marca: acoes de identidade e navegacao principal.
   primary:
-    "bg-[var(--accent)] text-[var(--text-on-accent)] hover:bg-[var(--accent-hover)] shadow-[var(--shadow-sm)]",
+    "bg-[var(--accent)] text-white shadow-[0_4px_0_var(--lip-accent)] hover:bg-[var(--accent-hover)] active:shadow-[0_0_0_var(--lip-accent)] active:translate-y-[4px]",
   secondary:
-    "bg-[var(--bg-surface-raised)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:border-[var(--border-strong)]",
+    "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-2 border-[var(--border-subtle)] shadow-[0_4px_0_var(--lip-neutral)] hover:bg-[var(--bg-surface-raised)] active:shadow-[0_0_0_var(--lip-neutral)] active:translate-y-[4px]",
+  // Sem labio de proposito: o fantasma nao e um objeto, e um atalho.
   ghost:
-    "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-surface-raised)] hover:text-[var(--text-primary)]",
-  success:
-    "bg-[var(--success)] text-white hover:brightness-110 shadow-[var(--shadow-sm)]",
+    "bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-surface-raised)] hover:text-[var(--text-primary)] active:translate-y-[1px]",
   danger:
-    "bg-[var(--error)] text-white hover:brightness-110 shadow-[var(--shadow-sm)]",
+    "bg-[var(--error)] text-white shadow-[0_4px_0_var(--lip-error)] hover:brightness-105 active:shadow-[0_0_0_var(--lip-error)] active:translate-y-[4px]",
 };
 
 const SIZES: Record<Size, string> = {
   // min-h garante o alvo de toque de 44px exigido em mobile, mesmo quando o
   // conteudo do botao e curto.
-  sm: "text-sm px-3 py-1.5 min-h-9 rounded-[var(--radius-sm)] gap-1.5",
-  md: "text-base px-5 py-2.5 min-h-11 rounded-[var(--radius-md)] gap-2",
-  lg: "text-lg px-7 py-3.5 min-h-13 rounded-[var(--radius-lg)] gap-2.5 font-semibold",
+  sm: "text-xs px-4 py-2 min-h-10 rounded-[var(--radius-sm)] gap-1.5",
+  md: "text-sm px-6 py-3 min-h-12 rounded-[var(--radius-md)] gap-2",
+  lg: "text-base px-8 py-4 min-h-14 rounded-[var(--radius-md)] gap-2.5",
 };
 
 export function Button({
-  variant = "primary",
+  variant = "action",
   size = "md",
   loading = false,
   fullWidth = false,
@@ -51,16 +67,19 @@ export function Button({
   return (
     <button
       className={cn(
-        "inline-flex items-center justify-center font-medium select-none",
-        "transition-[transform,background-color,border-color,filter]",
-        "duration-[var(--duration-fast)] ease-[var(--ease-standard)]",
-        // O recuo no clique da a sensacao fisica de pressionar. E sutil de
-        // proposito: 2% e perceptivel sem parecer um brinquedo.
-        "active:scale-[0.98]",
-        "disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100",
+        // Caixa alta com tracking aberto. Em rotulo curto de acao ela le como
+        // voz — "CONTINUAR" soa dito, "Continuar" soa escrito.
+        "inline-flex items-center justify-center select-none",
+        "font-extrabold uppercase tracking-[0.06em]",
+        "transition-[transform,background-color,box-shadow,filter]",
+        "duration-[var(--duration-press)] ease-[var(--ease-standard)]",
         VARIANTS[variant],
         SIZES[size],
         fullWidth && "w-full",
+        // Desabilitado perde o labio: deixa de ser objeto pressionavel e vira
+        // superficie morta. A informacao chega pela forma, nao so pela opacidade.
+        isBlocked &&
+          "cursor-not-allowed bg-[var(--bg-inset)] text-[var(--text-muted)] border-transparent shadow-none hover:bg-[var(--bg-inset)] hover:brightness-100 active:translate-y-0 active:shadow-none",
         className,
       )}
       disabled={isBlocked}

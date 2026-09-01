@@ -25,7 +25,7 @@ export function Achievement({
   return (
     <div
       className={cn(
-        "flex items-center gap-3 p-3 rounded-[var(--radius-md)] border",
+        "flex items-center gap-3 p-3.5 rounded-[var(--radius-lg)] border-2",
         unlocked
           ? "border-[var(--reward)] bg-[var(--reward-soft)]"
           : "border-[var(--border-subtle)] bg-[var(--bg-surface-raised)]",
@@ -34,9 +34,9 @@ export function Achievement({
     >
       <span
         className={cn(
-          "shrink-0 grid place-items-center size-11 rounded-full",
+          "shrink-0 grid place-items-center size-12 rounded-full",
           unlocked
-            ? "bg-[var(--reward)] text-white"
+            ? "bg-[var(--reward)] text-[#5c4300] shadow-[0_3px_0_var(--lip-reward)]"
             : "bg-[var(--bg-inset)] text-[var(--text-muted)]",
         )}
         aria-hidden="true"
@@ -47,7 +47,7 @@ export function Achievement({
       <span className="min-w-0">
         <span
           className={cn(
-            "block text-sm font-semibold truncate",
+            "block text-sm font-extrabold truncate",
             !unlocked && "text-[var(--text-secondary)]",
           )}
         >

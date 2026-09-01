@@ -3,7 +3,7 @@
 import { useTheme } from "./ThemeProvider";
 import { Button } from "@/components/ui/Button";
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const { theme, toggleTheme } = useTheme();
   const isDark = theme === "dark";
 
@@ -11,6 +11,7 @@ export function ThemeToggle() {
     <Button
       variant="secondary"
       size="sm"
+      className={className}
       onClick={toggleTheme}
       aria-label={isDark ? "Mudar para tema claro" : "Mudar para tema escuro"}
       leadingIcon={isDark ? <SunIcon /> : <MoonIcon />}

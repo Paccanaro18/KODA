@@ -10,7 +10,9 @@ import { AnswerOption, type AnswerState } from "@/components/ui/AnswerOption";
 import { SkillNode } from "@/components/ui/SkillNode";
 import { XpCounter, XpGain } from "@/components/ui/Xp";
 import { Streak } from "@/components/ui/Streak";
-import { KodaOrb } from "@/components/ui/KodaOrb";
+import { Koda } from "@/components/ui/Koda";
+import { Hearts } from "@/components/ui/Hearts";
+import { Gems } from "@/components/ui/Gems";
 import { CodeBlock } from "@/components/ui/CodeBlock";
 import { Achievement } from "@/components/ui/Achievement";
 import { Feedback } from "@/components/ui/Feedback";
@@ -27,7 +29,7 @@ export default function DesignSystemPage() {
     <main className="min-h-screen px-6 py-10 max-w-5xl mx-auto">
       <header className="flex items-start justify-between gap-4 mb-12">
         <div className="flex items-center gap-3">
-          <KodaOrb state="idle" size={44} />
+          <Koda state="idle" size={56} />
           <div>
             <h1 className="text-3xl">KODA</h1>
             <p className="text-[var(--text-secondary)] text-sm">
@@ -35,7 +37,15 @@ export default function DesignSystemPage() {
             </p>
           </div>
         </div>
-        <ThemeToggle />
+        <div className="flex items-center gap-4">
+          <a
+            href="/aprender"
+            className="text-sm font-extrabold uppercase tracking-[0.06em] text-[var(--accent)] hover:underline"
+          >
+            Ver a trilha
+          </a>
+          <ThemeToggle />
+        </div>
       </header>
 
       <div className="space-y-12">
@@ -116,10 +126,10 @@ function ButtonSection() {
   return (
     <Section title="Button" hint="Variantes e estados, incluindo loading e disabled.">
       <div className="flex flex-wrap gap-3 items-center">
-        <Button variant="primary">Continuar</Button>
+        <Button variant="action">Continuar</Button>
         <Button variant="secondary">Revisar</Button>
         <Button variant="ghost">Pular</Button>
-        <Button variant="success">Verificar</Button>
+        <Button variant="primary">Verificar</Button>
         <Button variant="danger">Encerrar</Button>
         <Button loading>Carregando</Button>
         <Button disabled>Indisponivel</Button>
@@ -264,10 +274,15 @@ function GamificationSection() {
           <CardTitle>Sua evolucao</CardTitle>
           <CardDescription>Sequencia e experiencia acumulada</CardDescription>
 
-          <div className="flex items-center gap-5 mt-4">
+          <div className="flex flex-wrap items-center gap-5 mt-4">
             <XpCounter value={xp} />
             <Streak days={12} />
             <Streak days={3} atRisk size="sm" />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-5 mt-4">
+            <Gems value={430} />
+            <Hearts value={3} max={5} />
           </div>
 
           <div className="flex items-center gap-3 mt-4">
@@ -330,20 +345,20 @@ function GamificationSection() {
 function KodaAiSection() {
   return (
     <Section
-      title="Koda AI"
-      hint="Identidade abstrata e geometrica. Os estados se distinguem pelo ritmo do movimento."
+      title="Koda"
+      hint="O personagem do produto. Os estados se distinguem por expressao e por ritmo do movimento, nunca por cor."
     >
       <div className="flex flex-wrap gap-8">
-        {(["idle", "thinking", "explaining", "celebrating"] as const).map(
-          (state) => (
-            <div key={state} className="flex flex-col items-center gap-2">
-              <KodaOrb state={state} size={56} />
-              <span className="text-xs font-mono text-[var(--text-secondary)]">
-                {state}
-              </span>
-            </div>
-          ),
-        )}
+        {(
+          ["idle", "thinking", "explaining", "celebrating", "encouraging"] as const
+        ).map((state) => (
+          <div key={state} className="flex flex-col items-center gap-2">
+            <Koda state={state} size={72} />
+            <span className="text-xs font-mono text-[var(--text-secondary)]">
+              {state}
+            </span>
+          </div>
+        ))}
       </div>
     </Section>
   );

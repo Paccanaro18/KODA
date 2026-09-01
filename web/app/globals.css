@@ -14,68 +14,104 @@
 
    Componentes usam APENAS a camada 2. Trocar a marca inteira e reescrever a
    camada 1; trocar o significado de um papel e reescrever a camada 2.
+
+   --- Direcao visual -------------------------------------------------------
+
+   A linguagem e chapada e volumetrica, nao "flat + sombra difusa". Cada
+   elemento acionavel tem um LABIO: uma faixa solida mais escura embaixo, que
+   some quando o elemento e pressionado. E o que da a sensacao fisica de
+   apertar um botao de verdade — o mesmo recurso que faz a interface do
+   Duolingo parecer um objeto, e nao um documento.
+
+   O labio e sempre `box-shadow`, nunca `border-bottom`. Borda muda a altura
+   da caixa; ao remove-la no :active o layout inteiro pularia. Sombra nao
+   ocupa espaco, entao o afundar e puro movimento.
    ============================================================================ */
 
 @theme {
   /* --- Camada 1: escalas brutas ------------------------------------------ */
 
-  --color-brand-50:  #eef0ff;
-  --color-brand-100: #e0e3ff;
-  --color-brand-200: #c7ccff;
-  --color-brand-300: #a5aaff;
-  --color-brand-400: #837fff;
-  --color-brand-500: #635bff;
-  --color-brand-600: #524ae0;
-  --color-brand-700: #423bb8;
-  --color-brand-800: #332d8f;
-  --color-brand-900: #241f66;
+  /* Indigo da marca. Saturado o suficiente para virar cor de personagem, e
+     nao de dashboard corporativo. */
+  --color-brand-50:  #f0eeff;
+  --color-brand-100: #e3dfff;
+  --color-brand-200: #c9c1ff;
+  --color-brand-300: #a99bff;
+  --color-brand-400: #8674ff;
+  --color-brand-500: #6250ff;
+  --color-brand-600: #4e3ce6;
+  --color-brand-700: #3d2dbf;
+  --color-brand-800: #2e2196;
+  --color-brand-900: #201670;
 
-  --color-cyan-300: #7aeaf8;
-  --color-cyan-400: #4de0f5;
-  --color-cyan-500: #22d3ee;
-  --color-cyan-600: #0ea5c4;
+  /* Verde de acao. Em produto de pratica, "avancar" e "acertar" sao a mesma
+     emocao — por isso dividem a mesma cor, e ela e a mais viva do sistema. */
+  --color-green-200: #d7f7b4;
+  --color-green-300: #a5ed6e;
+  --color-green-400: #89e219;
+  --color-green-500: #58cc02;
+  --color-green-600: #46a302;
+  --color-green-700: #3a8600;
 
-  --color-amber-300: #fcd34d;
-  --color-amber-400: #fbbf24;
-  --color-amber-500: #f59e0b;
+  /* Azul de apoio: informacao, revisao, links. */
+  --color-sky-200: #b8e6fb;
+  --color-sky-300: #6fd0f8;
+  --color-sky-400: #1cb0f6;
+  --color-sky-500: #1899d6;
+  --color-sky-600: #0d7cb5;
 
-  --color-green-400: #4ade80;
-  --color-green-500: #22c55e;
-  --color-green-600: #16a34a;
+  /* Ambar: recompensa, XP, gemas. */
+  --color-amber-200: #ffe8a3;
+  --color-amber-300: #ffd83d;
+  --color-amber-400: #ffc800;
+  --color-amber-500: #e5a400;
+  --color-amber-600: #bf8600;
 
-  --color-red-400: #f87171;
-  --color-red-500: #ef4444;
-  --color-red-600: #dc2626;
+  /* Vermelho: vidas e erro. Quente, nunca alarmante demais. */
+  --color-red-200: #ffd0d0;
+  --color-red-300: #ff8f8f;
+  --color-red-400: #ff4b4b;
+  --color-red-500: #e63939;
+  --color-red-600: #c22c2c;
 
-  /* --- Tipografia -------------------------------------------------------- */
+  /* --- Tipografia ---------------------------------------------------------
+     Nunito no lugar do Inter. Terminais arredondados e contraste baixo: a
+     letra parece escrita, nao gerada. E o unico ajuste que muda o tom do
+     produto inteiro sem trocar uma cor sequer. */
 
-  --font-sans: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-nunito), system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-mono: var(--font-jetbrains-mono), ui-monospace, "Cascadia Code", Consolas, monospace;
 
-  --text-xs: 0.75rem;
-  --text-sm: 0.875rem;
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
   --text-base: 1rem;
   --text-lg: 1.125rem;
-  --text-xl: 1.25rem;
-  --text-2xl: 1.5rem;
-  --text-3xl: 1.875rem;
-  --text-4xl: 2.375rem;
-  --text-5xl: 3rem;
+  --text-xl: 1.3125rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.25rem;
 
-  /* --- Raio -------------------------------------------------------------- */
+  /* --- Raio ---------------------------------------------------------------
+     Generosos de proposito. Canto duro le como ferramenta; canto redondo le
+     como algo que se pode pegar na mao. */
 
-  --radius-sm: 0.375rem;
-  --radius-md: 0.625rem;
-  --radius-lg: 0.875rem;
-  --radius-xl: 1.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 999px;
 
   /* --- Motion ------------------------------------------------------------
      Curtas de proposito. A animacao existe para explicar a mudanca de estado,
-     nunca para fazer o usuario esperar por ela. */
+     nunca para fazer o usuario esperar por ela. O `bounce` passa do alvo e
+     volta: e o que separa "elemento reposicionado" de "elemento vivo". */
 
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-bounce: cubic-bezier(0.28, 1.7, 0.55, 0.98);
 
+  --duration-press: 60ms;
   --duration-instant: 80ms;
   --duration-fast: 140ms;
   --duration-base: 220ms;
@@ -88,73 +124,104 @@
 
    Definidos primeiro no tema claro, e redefinidos no escuro. O dark mode tem
    hierarquia propria de superficies — nao e o claro invertido.
+
+   Cada cor de acao vem em par: a cor e o seu `--lip-*`, a faixa escura de
+   baixo. Sao inseparaveis; usar uma sem a outra quebra o volume.
    ============================================================================ */
 
 :root {
-  --bg-canvas: #fbfbfd;
+  --bg-canvas: #ffffff;
   --bg-surface: #ffffff;
-  --bg-surface-raised: #f5f6fa;
-  --bg-inset: #eef0f6;
+  --bg-surface-raised: #f7f8fa;
+  --bg-inset: #f0f1f5;
 
-  --border-subtle: #e4e7f0;
-  --border-strong: #cdd3e2;
+  --border-subtle: #e5e6ea;
+  --border-strong: #d3d5dc;
+  --lip-neutral: #d3d5dc;
 
-  --text-primary: #0f1425;
-  --text-secondary: #5a6484;
-  --text-muted: #8a93ad;
+  --text-primary: #3c3c46;
+  --text-secondary: #75758a;
+  --text-muted: #aeaeba;
   --text-on-accent: #ffffff;
 
   --accent: var(--color-brand-500);
-  --accent-hover: var(--color-brand-600);
+  --accent-hover: var(--color-brand-400);
+  --lip-accent: var(--color-brand-700);
   --accent-soft: var(--color-brand-50);
-  --accent-secondary: var(--color-cyan-600);
+  --accent-secondary: var(--color-sky-400);
+  --lip-accent-secondary: var(--color-sky-500);
+  --accent-secondary-soft: #e6f6fe;
 
-  --reward: var(--color-amber-500);
-  --reward-soft: #fef3c7;
+  --action: var(--color-green-500);
+  --action-hover: var(--color-green-400);
+  --lip-action: var(--color-green-600);
+  --action-soft: #e8fada;
+
+  --reward: var(--color-amber-400);
+  --lip-reward: var(--color-amber-500);
+  --reward-soft: #fff6d9;
+
   --success: var(--color-green-600);
-  --success-soft: #dcfce7;
-  --error: var(--color-red-600);
-  --error-soft: #fee2e2;
+  --success-soft: #e8fada;
+  --lip-success: var(--color-green-700);
+
+  --error: var(--color-red-400);
+  --error-soft: #ffe9e9;
+  --lip-error: var(--color-red-500);
 
   --focus-ring: var(--color-brand-500);
 
-  --shadow-sm: 0 1px 2px rgb(15 20 37 / 0.06);
-  --shadow-md: 0 4px 12px rgb(15 20 37 / 0.08);
-  --shadow-lg: 0 12px 32px rgb(15 20 37 / 0.12);
+  /* Sombras difusas quase somem: nesta linguagem quem cria profundidade e o
+     labio solido, nao o borrao. Ficam so para camadas realmente flutuantes. */
+  --shadow-sm: 0 1px 2px rgb(60 60 70 / 0.06);
+  --shadow-md: 0 4px 14px rgb(60 60 70 / 0.10);
+  --shadow-lg: 0 16px 40px rgb(60 60 70 / 0.16);
 
   color-scheme: light;
 }
 
 .dark {
-  --bg-canvas: #0b1020;
-  --bg-surface: #131a2e;
-  --bg-surface-raised: #1b2440;
-  --bg-inset: #0e1424;
+  --bg-canvas: #0f1524;
+  --bg-surface: #161d2f;
+  --bg-surface-raised: #1e2740;
+  --bg-inset: #0c1120;
 
-  --border-subtle: #252f4a;
-  --border-strong: #35426a;
+  --border-subtle: #2a344f;
+  --border-strong: #3b4771;
+  --lip-neutral: #0a0f1c;
 
   --text-primary: #f2f4fb;
   --text-secondary: #a3acc8;
   --text-muted: #6b7594;
-  --text-on-accent: #0b1020;
+  --text-on-accent: #ffffff;
 
   --accent: var(--color-brand-400);
   --accent-hover: var(--color-brand-300);
-  --accent-soft: #1e2547;
-  --accent-secondary: var(--color-cyan-400);
+  --lip-accent: var(--color-brand-700);
+  --accent-soft: #232b52;
+  --accent-secondary: var(--color-sky-400);
+  --lip-accent-secondary: var(--color-sky-600);
+  --accent-secondary-soft: #10304a;
+
+  --action: var(--color-green-500);
+  --action-hover: var(--color-green-400);
+  --lip-action: var(--color-green-700);
+  --action-soft: #16351a;
 
   --reward: var(--color-amber-400);
+  --lip-reward: var(--color-amber-600);
   --reward-soft: #3a2c0d;
+
   --success: var(--color-green-500);
-  --success-soft: #0f2e1c;
-  --error: var(--color-red-500);
+  --success-soft: #16351a;
+  --lip-success: var(--color-green-700);
+
+  --error: var(--color-red-400);
   --error-soft: #3a1717;
+  --lip-error: var(--color-red-600);
 
-  --focus-ring: var(--color-cyan-400);
+  --focus-ring: var(--color-sky-400);
 
-  /* No escuro a sombra sozinha nao cria profundidade — o contraste de
-     superficie faz mais trabalho, e a sombra so reforca. */
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
   --shadow-md: 0 4px 12px rgb(0 0 0 / 0.45);
   --shadow-lg: 0 12px 32px rgb(0 0 0 / 0.55);
@@ -181,6 +248,9 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-soft: var(--accent-soft);
   --color-accent-secondary: var(--accent-secondary);
+
+  --color-action: var(--action);
+  --color-action-soft: var(--action-soft);
 
   --color-reward: var(--reward);
   --color-reward-soft: var(--reward-soft);
@@ -219,17 +289,22 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/*
+  Titulo pesado e sem aperto de tracking. O `-0.02em` que o sistema usava vinha
+  da estetica de landing page de SaaS; em Nunito ele so espreme a letra e tira
+  justamente a respiracao que faz o texto parecer amigavel.
+*/
 h1, h2, h3, h4 {
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 800;
 }
 
 /* Foco visivel e inegociavel: e a unica forma de navegar por teclado.
    :focus-visible mostra o anel para teclado sem polui-lo no clique de mouse. */
 :focus-visible {
-  outline: 2px solid var(--focus-ring);
-  outline-offset: 2px;
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
 
@@ -266,6 +341,13 @@ h1, h2, h3, h4 {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* Entrada vinda de baixo, para a barra de feedback: ela sobe para dentro da
+   tela como um painel fisico, em vez de simplesmente aparecer. */
+@keyframes koda-slide-up {
+  from { opacity: 0; transform: translateY(100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes koda-pop {
   0%   { transform: scale(0.86); opacity: 0; }
   60%  { transform: scale(1.06); }
@@ -284,9 +366,39 @@ h1, h2, h3, h4 {
   50%      { opacity: 0.55; }
 }
 
-@keyframes koda-orb-breathe {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  50%      { transform: scale(1.06) rotate(180deg); }
+/* Squash & stretch. O personagem comprime antes de subir e estica no ar: sem
+   isso o pulo le como uma imagem deslizando; com isso, le como massa. */
+@keyframes koda-bounce {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  20%      { transform: translateY(0) scale(1.08, 0.92); }
+  50%      { transform: translateY(-12%) scale(0.95, 1.05); }
+  80%      { transform: translateY(0) scale(1.04, 0.96); }
+}
+
+@keyframes koda-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25%      { transform: rotate(-4deg); }
+  75%      { transform: rotate(4deg); }
+}
+
+/* Piscada: a palpebra fecha e abre em dois frames curtos. O resto do ciclo e
+   olho aberto — e a pausa longa que faz parecer respiracao, nao piscar de LED. */
+@keyframes koda-blink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95%, 97%      { transform: scaleY(0.06); }
+}
+
+@keyframes koda-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6%); }
+}
+
+@keyframes koda-tada {
+  0%   { transform: scale(1) rotate(0deg); }
+  20%  { transform: scale(1.12) rotate(-6deg); }
+  45%  { transform: scale(1.1) rotate(6deg); }
+  70%  { transform: scale(1.08) rotate(-4deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }
 
 @keyframes koda-shimmer {

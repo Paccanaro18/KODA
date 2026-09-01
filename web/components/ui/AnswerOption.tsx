@@ -21,19 +21,31 @@ interface AnswerOptionProps
   mono?: boolean;
 }
 
+/**
+ * Alternativa de multipla escolha.
+ *
+ * Cada alternativa e um objeto pressionavel de verdade: tem labio, afunda no
+ * clique e continua afundada enquanto estiver selecionada. Esse "ficar
+ * apertado" e o que dispensa qualquer marcacao extra de selecao.
+ */
 const STATES: Record<AnswerState, string> = {
   default:
-    "border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent)] hover:bg-[var(--accent-soft)]",
-  selected: "border-[var(--accent)] bg-[var(--accent-soft)]",
-  correct: "border-[var(--success)] bg-[var(--success-soft)]",
-  incorrect: "border-[var(--error)] bg-[var(--error-soft)]",
-  revealed: "border-[var(--success)] bg-[var(--success-soft)] opacity-90",
+    "border-[var(--border-subtle)] bg-[var(--bg-surface)] shadow-[0_4px_0_var(--lip-neutral)] hover:bg-[var(--bg-surface-raised)] active:shadow-[0_0_0_var(--lip-neutral)] active:translate-y-[4px]",
+  // Selecionada permanece no fundo: nao ha labio, e ela ja esta deslocada.
+  selected:
+    "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)] translate-y-[4px] shadow-none",
+  correct:
+    "border-[var(--success)] bg-[var(--success-soft)] text-[var(--lip-success)] translate-y-[4px] shadow-none",
+  incorrect:
+    "border-[var(--error)] bg-[var(--error-soft)] text-[var(--lip-error)] translate-y-[4px] shadow-none",
+  revealed:
+    "border-[var(--success)] bg-[var(--success-soft)] text-[var(--lip-success)] translate-y-[4px] shadow-none",
 };
 
 const MARKER_STATES: Record<AnswerState, string> = {
   default:
-    "border-[var(--border-strong)] text-[var(--text-secondary)] bg-[var(--bg-surface)]",
-  selected: "border-[var(--accent)] bg-[var(--accent)] text-[var(--text-on-accent)]",
+    "border-[var(--border-strong)] text-[var(--text-muted)] bg-[var(--bg-surface)]",
+  selected: "border-[var(--accent)] bg-[var(--accent)] text-white",
   correct: "border-[var(--success)] bg-[var(--success)] text-white",
   incorrect: "border-[var(--error)] bg-[var(--error)] text-white",
   revealed: "border-[var(--success)] bg-[var(--success)] text-white",
@@ -55,12 +67,11 @@ export function AnswerOption({
     <button
       type="button"
       className={cn(
-        "group w-full flex items-center gap-3 text-left",
-        // min-h-14 mantem o alvo de toque confortavel em mobile.
-        "px-4 py-3.5 min-h-14 border-2 rounded-[var(--radius-md)]",
-        "transition-[transform,background-color,border-color]",
-        "duration-[var(--duration-fast)] ease-[var(--ease-standard)]",
-        !isResolved && !disabled && "active:scale-[0.99]",
+        "group w-full flex items-center gap-3 text-left font-bold",
+        // min-h-16 mantem o alvo de toque confortavel em mobile.
+        "px-4 py-4 min-h-16 border-2 rounded-[var(--radius-md)]",
+        "transition-[transform,background-color,border-color,box-shadow]",
+        "duration-[var(--duration-press)] ease-[var(--ease-standard)]",
         disabled && "cursor-not-allowed opacity-60",
         STATES[state],
         className,
@@ -73,8 +84,8 @@ export function AnswerOption({
       {marker && (
         <span
           className={cn(
-            "shrink-0 grid place-items-center size-7 rounded-md border-2",
-            "text-sm font-semibold transition-colors duration-[var(--duration-fast)]",
+            "shrink-0 grid place-items-center size-8 rounded-[var(--radius-sm)] border-2",
+            "text-sm font-extrabold transition-colors duration-[var(--duration-fast)]",
             MARKER_STATES[state],
           )}
           aria-hidden="true"
@@ -83,7 +94,9 @@ export function AnswerOption({
         </span>
       )}
 
-      <span className={cn("flex-1", mono && "font-mono text-sm")}>{label}</span>
+      <span className={cn("flex-1", mono && "font-mono text-sm font-semibold")}>
+        {label}
+      </span>
 
       {/*
         Icone alem da cor. Comunicar acerto e erro apenas por verde e vermelho
@@ -111,7 +124,7 @@ function StatusIcon({ kind }: { kind: "correct" | "incorrect" | "revealed" }) {
       <span className="sr-only">{srText}</span>
       <span
         className={cn(
-          "shrink-0 grid place-items-center size-6 rounded-full text-white",
+          "shrink-0 grid place-items-center size-7 rounded-full text-white",
           "motion-safe:animate-[koda-pop_var(--duration-base)_var(--ease-spring)]",
           isPositive ? "bg-[var(--success)]" : "bg-[var(--error)]",
         )}
@@ -122,7 +135,7 @@ function StatusIcon({ kind }: { kind: "correct" | "incorrect" | "revealed" }) {
             <path
               d="M5 13l4 4L19 7"
               stroke="currentColor"
-              strokeWidth="3"
+              strokeWidth="3.5"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -132,7 +145,7 @@ function StatusIcon({ kind }: { kind: "correct" | "incorrect" | "revealed" }) {
             <path
               d="M6 6l12 12M18 6L6 18"
               stroke="currentColor"
-              strokeWidth="3"
+              strokeWidth="3.5"
               strokeLinecap="round"
             />
           </svg>
