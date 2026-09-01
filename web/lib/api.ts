@@ -18,6 +18,25 @@ export interface Me {
   prefersReducedMotion: boolean;
 }
 
+/** `state` usa os mesmos nomes que SkillNode.tsx ja consome: nenhuma traducao aqui. */
+export interface CurriculumConcept {
+  id: string;
+  title: string;
+  state: "locked" | "available" | "active" | "completed" | "mastered" | "needsReview";
+  progress: number;
+}
+
+export interface CurriculumTopic {
+  id: string;
+  name: string;
+  description: string | null;
+  concepts: CurriculumConcept[];
+}
+
+export interface CurriculumMap {
+  topics: CurriculumTopic[];
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,
@@ -87,6 +106,12 @@ export function logout(): Promise<void> {
 
 export function me(accessToken: string): Promise<Me> {
   return request("/api/v1/auth/me", {
+    headers: { Authorization: `Bearer ${accessToken}` },
+  });
+}
+
+export function curriculumMap(accessToken: string): Promise<CurriculumMap> {
+  return request("/api/v1/curriculum/map", {
     headers: { Authorization: `Bearer ${accessToken}` },
   });
 }

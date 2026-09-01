@@ -47,12 +47,12 @@ Fundação do backend, autenticação, autorização e o esqueleto do frontend c
 Grafo de conceitos, pré-requisitos e mapa de aprendizado.
 
 **Concluída quando:**
-- [ ] Schema de subjects, topics, concepts e pré-requisitos migrado
-- [ ] Conteúdo curado inicial para ao menos 2 trilhas completas
-- [ ] Validador de grafo detecta ciclos e quebra o CI
-- [ ] API de currículo com estados: locked, available, active, completed, mastered, needs-review
-- [ ] Mapa de aprendizado navegável e responsivo
-- [ ] Regra de pré-requisito impede conteúdo avançado sem base, exceto em modo diagnóstico
+- [x] Schema de subjects, topics, concepts e pré-requisitos migrado (`V2__curriculum_schema.sql`)
+- [x] Conteúdo curado inicial para ao menos 2 trilhas completas (Fundamentos da linguagem, Estruturas de dados — 10 concepts)
+- [x] Validador de grafo detecta ciclos e quebra o CI (`CurriculumGraphValidator` + `CurriculumGraphStartupCheck`, aplicação recusa subir com ciclo)
+- [x] API de currículo com estados: locked, available, active, completed, mastered, needs-review (`GET /api/v1/curriculum/map`)
+- [x] Mapa de aprendizado navegável e responsivo (`/aprender` ligado à API real)
+- [ ] Regra de pré-requisito impede conteúdo avançado sem base, **exceto em modo diagnóstico** — a regra em si está implementada e testada; o modo diagnóstico (pular pré-requisito num teste de nivelamento) não existe ainda, é feature própria maior que esta fase
 
 ## Phase 3 — Question Engine
 

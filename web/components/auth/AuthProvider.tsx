@@ -20,6 +20,8 @@ interface AuthContextValue {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, displayName?: string) => Promise<void>;
   logout: () => Promise<void>;
+  /** Le o ref diretamente — nao passa pelo estado do React, entao nao causa re-render. */
+  getAccessToken: () => string | null;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -93,8 +95,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  const getAccessToken = useCallback(() => accessTokenRef.current, []);
+
   return (
-    <AuthContext.Provider value={{ status, user, login, register, logout }}>
+    <AuthContext.Provider value={{ status, user, login, register, logout, getAccessToken }}>
       {children}
     </AuthContext.Provider>
   );
